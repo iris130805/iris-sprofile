@@ -378,7 +378,13 @@
                 </div>
 
                 <!-- Timeline (滾動條已優化) -->
-                <div class="glass-card p-8 rounded-2xl relative max-h-[600px] overflow-y-auto custom-scrollbar">
+                <!-- 修改說明：
+     1. max-h-none: 手機版不限制高度 (直接展開)
+     2. md:max-h-[600px]: 電腦版才限制高度 600px
+     3. overflow-visible: 手機版不隱藏溢出內容
+     4. md:overflow-y-auto: 電腦版才出現捲軸
+-->
+<div class="glass-card p-8 rounded-2xl relative max-h-none md:max-h-[600px] overflow-visible md:overflow-y-auto custom-scrollbar">
                     <!-- 修改說明：在 class 最後面加入了 text-center -->
 <h4 class="text-xl font-bold mb-8 text-white border-b border-gray-700 pb-4 sticky top-0 bg-[#1E293B] z-10 text-center">
     Professional Timeline
@@ -593,7 +599,6 @@
             </h3>
             <br>
             <!-- 修改處：加入 mx-auto 讓整個卡片區塊置中 -->
-            <!-- 如果覺得左邊單邊框不對稱，可將 border-l-4 改為 border 變成全框 -->
             <div class="glass-card p-6 md:p-8 rounded-2xl border-l-4 border-neon-pink max-w-4xl mx-auto">
                 <p class="text-gray-300 text-lg leading-relaxed">
                     成功策劃並管理 Podcast 專案達 3 年，累計創造逾 <span class="text-white font-bold">2,500 萬次</span> 下載量。<br>
@@ -603,16 +608,17 @@
             
         </div>
 
-        <!-- 下方 Podcast Grid 區塊保持不變... -->
+        <!-- ▼▼▼ 新增：手機版滑動提示 (加在這裡) ▼▼▼ -->
+        <div class="md:hidden text-center mt-6 mb-2 animate-pulse">
+            <span class="text-neon-pink text-sm font-bold tracking-widest">
+                <i class="fas fa-chevron-left mr-1"></i> 左右滑動聆聽 <i class="fas fa-chevron-right ml-1"></i>
+            </span>
+        </div>
+        <!-- ▲▲▲ 新增結束 ▲▲▲ -->
 
-            <!-- Podcast Grid (Responsive: Mobile Horizontal Scroll / Desktop Grid) -->
-            <!-- 修改說明: 
-                 1. flex: 手機版改為彈性佈局 
-                 2. overflow-x-auto: 開啟水平捲動條
-                 3. snap-x snap-mandatory: 增加滑動時的磁吸效果，體驗更好
-                 4. pb-6: 底部留一點空間給捲動條
-            -->
-            <div class="flex gap-6 overflow-x-auto pb-8 px-4 -mx-4 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 md:px-0 md:mx-0 snap-x snap-mandatory scroll-smooth">
+        <!-- Podcast Grid (Responsive: Mobile Horizontal Scroll / Desktop Grid) -->
+        <div class="flex gap-6 overflow-x-auto pb-8 px-4 -mx-4 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 md:px-0 md:mx-0 snap-x snap-mandatory scroll-smooth">
+             
                 
                 <!-- Item 1 -->
                 <!-- 修改說明: 加入 min-w-[85vw] (手機版寬度) 與 flex-shrink-0 (防止壓縮) -->
