@@ -292,45 +292,44 @@
         <!-- 3. 漸層遮罩 -->
         <div class="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent z-10"></div>
 
-        <!-- 4. Hero 內容 -->
-        <div class="relative z-20 max-w-5xl mx-auto px-6 w-full text-center flex flex-col items-center">
-            
-            <!-- 標籤 -->
-            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full glass-card mb-10 border border-neon-blue/30 shadow-[0_0_15px_rgba(79,117,255,0.3)] animate-fade-in-up">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-pink opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-neon-pink"></span>
-                </span>
-                <span class="text-xs font-mono font-bold tracking-[0.3em] uppercase text-neon-blue">AI-Driven Strategy</span>
-            </div>
-            
-            <!-- 主標題 -->
-            <h1 class="text-5xl md:text-8xl font-extrabold mb-8 leading-tight text-white tracking-tight drop-shadow-xl">
-                讓複雜的議題 <br>
-                <span class="text-gradient">變得清楚好懂</span>
-            </h1>
-            
-            <!-- 副標題 -->
-            <p class="text-lg md:text-2xl mb-12 text-gray-100 leading-relaxed max-w-3xl mx-auto drop-shadow-md tracking-wide font-medium">
-                以內容策略、專案整合與 AI 驅動能力，將想法化為能看見成果的計畫<br>
-            
-            </p>
-            
-            <!-- 按鈕群組 -->
-            <div class="flex flex-col sm:flex-row gap-6 justify-center w-full">
-                <a href="#pm" class="group relative px-10 py-5 bg-white text-dark-bg font-bold overflow-hidden rounded-sm transition-all hover:bg-gray-200 shadow-[0_0_20px_rgba(255,255,255,0.3)] text-lg">
-                    <div class="absolute inset-0 w-0 bg-neon-blue transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
-                    <span class="relative">探索專案成果</span>
-                    <i class="fas fa-arrow-right ml-2 relative group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <!-- href: 檔案的路徑 -->
-<!-- download: 告訴瀏覽器這是一個下載行為，並指定下載後的預設檔名 -->
-<a href="./Iris’s Resume2025.pdf" download="Iris_Resume_2025.pdf" target="_blank" class="px-10 py-5 glass-card text-white font-bold rounded-sm hover:border-neon-pink/50 hover:bg-white/5 transition border border-white/20 flex items-center justify-center gap-2 text-lg">
-    <i class="fas fa-file-download text-neon-pink"></i>
-    下載履歷 PDF
-</a>
-            </div>
-        </div>
+        <!-- 4. Hero 內容 (已修正手機版間距與文字清晰度) -->
+<div class="relative z-20 max-w-5xl mx-auto px-6 w-full text-center flex flex-col items-center">
+    
+    <!-- 修改 1: 加上 mt-24 (手機版頂部間距)，md:mt-0 (電腦版取消間距) -->
+    <!-- 原本只有 mb-10，現在改成 mt-24 mb-10 md:mt-0 -->
+    <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full glass-card mt-24 mb-10 md:mt-0 border border-neon-blue/30 shadow-[0_0_15px_rgba(79,117,255,0.3)] animate-fade-in-up">
+        <span class="relative flex h-3 w-3">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-pink opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-neon-pink"></span>
+        </span>
+        <span class="text-xs font-mono font-bold tracking-[0.3em] uppercase text-neon-blue">AI-Driven Strategy</span>
+    </div>
+    
+    <!-- 主標題 -->
+    <h1 class="text-5xl md:text-8xl font-extrabold mb-8 leading-tight text-white tracking-tight drop-shadow-xl">
+        讓複雜的議題 <br>
+        <span class="text-gradient">變得清楚好懂</span>
+    </h1>
+    
+    <!-- 修改 2: 優化副標題閱讀性 -->
+    <!-- 加上了 bg-black/40 (半透明黑底), backdrop-blur-sm (模糊濾鏡), p-4 (內距), rounded-xl (圓角) -->
+    <p class="text-lg md:text-2xl mb-12 text-gray-100 leading-relaxed max-w-3xl mx-auto drop-shadow-md tracking-wide font-medium bg-black/40 backdrop-blur-md p-4 md:p-0 md:bg-transparent md:backdrop-blur-none rounded-xl border border-white/10 md:border-none">
+        以內容策略、專案整合與 AI 驅動能力，<br class="md:hidden">將想法化為能看見成果的計畫
+    </p>
+    
+    <!-- 按鈕群組 (保持不變) -->
+    <div class="flex flex-col sm:flex-row gap-6 justify-center w-full">
+        <a href="#pm" class="group relative px-10 py-5 bg-white text-dark-bg font-bold overflow-hidden rounded-sm transition-all hover:bg-gray-200 shadow-[0_0_20px_rgba(255,255,255,0.3)] text-lg">
+            <div class="absolute inset-0 w-0 bg-neon-blue transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
+            <span class="relative">探索專案成果</span>
+            <i class="fas fa-arrow-right ml-2 relative group-hover:translate-x-1 transition-transform"></i>
+        </a>
+        <a href="./Iris_Resume.pdf" download="Iris_Resume_2025.pdf" target="_blank" class="px-10 py-5 glass-card text-white font-bold rounded-sm hover:border-neon-pink/50 hover:bg-white/5 transition border border-white/20 flex items-center justify-center gap-2 text-lg">
+            <i class="fas fa-file-download text-neon-pink"></i>
+            下載履歷 PDF
+        </a>
+    </div>
+</div>
     </header>
 
     <!-- 關於我 -->
@@ -720,7 +719,7 @@
                     <!-- ▲▲▲ 手機版圖片結束 ▲▲▲ -->
 
                     <p class="text-gray-300 mb-8 leading-relaxed text-lg">
-                        AI 驅動的社群實驗。從概念發想到落地，運用 <span class="text-neon-blue font-bold">Manus</span> 完成網站開發，並建立「有厚度」的社群關係。
+                        AI 驅動的社群實驗。從概念發想到落地，運用 <span class="text-neon-blue font-bold">Manus</span> 完成網站開發與配對小遊戲，並建立「有厚度」的社群關係。
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4">
