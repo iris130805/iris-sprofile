@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris's Portfolio | 讓複雜的議題變得清楚好懂</title>
+    <meta name="description" content="Iris的個人作品集 - 運用 AI 技術與數據思維，推動數位內容產業的下一個十年。">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- GSAP Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#E947F5',
+                        'neon-blue': '#4F75FF',
+                        'dark-bg': '#0F172A',
+                        'card-bg': '#1E293B',
+                    },
+                    fontFamily: {
+                        sans: ['"Inter"', '"Noto Sans TC"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* style.css - 沉浸式深色科技風格 */
+
+        /* 全域設定 */
+        body {
+            background-color: #0F172A; /* Slate 900 - 深色基底 */
+            color: #E2E8F0; /* Slate 200 - 淺灰文字 */
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* 玻璃擬態卡片 (Glassmorphism) */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* 半透明深藍 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card:hover {
+            border: 1px solid rgba(233, 71, 245, 0.3); /* Hover 時透出霓虹粉邊框 */
+            box-shadow: 0 0 20px rgba(233, 71, 245, 0.15);
+        }
+
+        /* 漸層文字效果 */
+        .text-gradient {
+            background: linear-gradient(to right, #E947F5, #4F75FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 導覽列 */
+        nav {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Three.js 容器 */
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        /* 裝飾用的背景網格點點 */
+        .tech-dots {
+            background-image: radial-gradient(#4F75FF 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.15;
+        }
+
+        /* 自定義捲軸 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* --- 3D Card Swap 樣式 (已優化 RWD) --- */
+        #card-swap-wrapper {
+            perspective: 1200px; /* 增加透視感 */
+            transform-style: preserve-3d;
+            min-height: 520px;
+        }
+
+        .swap-card {
+            position: absolute;
+            width: 360px;
+            height: 480px;
+            top: 50%;
+            left: 50%;
+            
+            /* Flex 佈局讓內容滿版 */
+            display: flex;
+            flex-direction: column;
+            text-decoration: none; /* 移除連結底線 */
+
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            
+            transform-style: preserve-3d;
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .swap-card:hover {
+            border-color: #4F75FF;
+            box-shadow: 0 0 25px rgba(79, 117, 255, 0.25);
+        }
+
+        @media (max-width: 768px) {
+            .swap-card {
+                /* 原本是 width: 300px; 改為下方這樣更靈活 */
+                width: 80vw;        /* 佔據螢幕寬度的 80% */
+                max-width: 320px;   /* 最大不超過 320px */
+                height: 440px;      /* 高度稍微調小一點點以適應手機 */
+                /* 確保手機版不會太寬 */
+            }
+            #card-swap-wrapper {
+                perspective: 600px; /* 手機版透視感調小一點，減少變形 */
+                min-height: 480px;
+            }
+        }
+        /* --- Electric Border (電光邊框特效) --- */
+.electric-border-container {
+    position: relative;
+    border-radius: 16px; /* 對應原本的 rounded-2xl */
+    overflow: visible;
+    isolation: isolate;
+    height: 100%; /* 確保高度撐滿 */
+}
+
+/* 隱藏 SVG 定義，避免佔位 */
+.eb-svg-def {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* 內容層 */
+.eb-content {
+    position: relative;
+    z-index: 10;
+    height: 100%;
+    border-radius: inherit;
+    background: transparent; /* 讓原本 glass-card 的背景生效 */
+}
+
+/* 特效層容器 */
+.eb-layers {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 20; /* 在內容之上或是之下視需求調整，通常邊框要在上 */
+}
+
+/* 各種光暈與邊框層 */
+.eb-stroke,
+.eb-glow-1,
+.eb-glow-2,
+.eb-background-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.eb-stroke {
+    border: 2px solid var(--eb-color);
+    /* 這裡會由 JS 動態添加 filter URL */
+}
+
+.eb-glow-1 {
+    border: 2px solid var(--eb-color);
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+.eb-glow-2 {
+    border: 2px solid var(--eb-color);
+    opacity: 0.4;
+    filter: blur(5px);
+}
+
+.eb-background-glow {
+    z-index: -1;
+    transform: scale(1.02);
+    filter: blur(20px);
+    opacity: 0.2;
+    background: linear-gradient(to bottom right, var(--eb-color), transparent);
+}
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-200 bg-dark-bg">
+
+ <!-- 導覽列 (已更新) -->
+    <nav class="fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo: 點擊回到頂部 -->
+                <a href="#" class="text-2xl font-extrabold tracking-wider text-white hover:text-neon-pink transition duration-300">
+                    IRIS<span class="text-neon-pink">.</span>PM
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-6 lg:space-x-8 items-center text-sm font-medium tracking-wide">
+                    <a href="#about" class="text-gray-300 hover:text-neon-pink transition">關於我</a>
+                    <a href="#pm" class="text-gray-300 hover:text-neon-pink transition">數位專案</a>
+                    <!-- 新增 Podcast 區塊連結 -->
+                    <a href="#podcast" class="text-gray-300 hover:text-neon-pink transition">聲音媒體</a>
+                    <a href="#content" class="text-gray-300 hover:text-neon-pink transition">內容創作</a>
+                    <a href="#community" class="text-gray-300 hover:text-neon-pink transition">社群創新</a>
+                    
+                    <a href="#contact" class="px-6 py-2 bg-gradient-to-r from-neon-pink to-neon-blue text-white rounded-full hover:shadow-[0_0_15px_rgba(233,71,245,0.5)] transition transform hover:-translate-y-0.5">
+                        聯絡我
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button class="mobile-menu-button text-white focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu (下拉選單) -->
+            <div class="mobile-menu hidden md:hidden bg-dark-bg/95 backdrop-blur-md absolute w-full left-0 border-b border-gray-700 pb-4 px-6 top-16 shadow-2xl">
+                <a href="#about" class="block py-3 text-gray-300 hover:text-neon-pink border-b border-gray-800">關於我</a>
+                <a href="#pm" class="block py-3 text-gray-300 hover:text-neon-pink border-b border-gray-800">數位專案</a>
+                <a href="#podcast" class="block py-3 text-gray-300 hover:text-neon-pink border-b border-gray-800">聲音媒體</a>
+                <a href="#content" class="block py-3 text-gray-300 hover:text-neon-pink border-b border-gray-800">內容創作</a>
+                <a href="#community" class="block py-3 text-gray-300 hover:text-neon-pink border-b border-gray-800">社群創新</a>
+                <a href="#contact" class="block py-3 text-neon-blue font-bold mt-2">聯絡我</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section (Three.js 3D 動畫背景) -->
+    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+        
+        <!-- 1. Three.js 動畫容器 -->
+        <div id="canvas-container"></div>
+
+        <!-- 2. 裝飾：背景網格點綴 -->
+        <div class="absolute inset-0 tech-dots pointer-events-none z-0"></div>
+
+        <!-- 3. 漸層遮罩 -->
+        <div class="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/80 to-transparent z-10"></div>
+
+        <!-- 4. Hero 內容 -->
+        <div class="relative z-20 max-w-5xl mx-auto px-6 w-full text-center flex flex-col items-center">
+            
+            <!-- 標籤 -->
+            <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full glass-card mb-10 border border-neon-blue/30 shadow-[0_0_15px_rgba(79,117,255,0.3)] animate-fade-in-up">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-pink opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-neon-pink"></span>
+                </span>
+                <span class="text-xs font-mono font-bold tracking-[0.3em] uppercase text-neon-blue">AI-Driven Strategy</span>
+            </div>
+            
+            <!-- 主標題 -->
+            <h1 class="text-5xl md:text-8xl font-extrabold mb-8 leading-tight text-white tracking-tight drop-shadow-xl">
+                讓複雜的議題 <br>
+                <span class="text-gradient">變得清楚好懂</span>
+            </h1>
+            
+            <!-- 副標題 -->
+            <p class="text-lg md:text-2xl mb-12 text-gray-100 leading-relaxed max-w-3xl mx-auto drop-shadow-md tracking-wide font-medium">
+                以內容策略、專案整合與 AI 驅動能力，將想法化為能看見成果的計畫<br>
+            
+            </p>
+            
+            <!-- 按鈕群組 -->
+            <div class="flex flex-col sm:flex-row gap-6 justify-center w-full">
+                <a href="#pm" class="group relative px-10 py-5 bg-white text-dark-bg font-bold overflow-hidden rounded-sm transition-all hover:bg-gray-200 shadow-[0_0_20px_rgba(255,255,255,0.3)] text-lg">
+                    <div class="absolute inset-0 w-0 bg-neon-blue transition-all duration-[250ms] ease-out group-hover:w-full opacity-10"></div>
+                    <span class="relative">探索專案成果</span>
+                    <i class="fas fa-arrow-right ml-2 relative group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <!-- href: 檔案的路徑 -->
+<!-- download: 告訴瀏覽器這是一個下載行為，並指定下載後的預設檔名 -->
+<a href="./Iris’s Resume2025.pdf" download="Iris_Resume_2025.pdf" target="_blank" class="px-10 py-5 glass-card text-white font-bold rounded-sm hover:border-neon-pink/50 hover:bg-white/5 transition border border-white/20 flex items-center justify-center gap-2 text-lg">
+    <i class="fas fa-file-download text-neon-pink"></i>
+    下載履歷 PDF
+</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 關於我 -->
+    <section id="about" class="py-24 relative bg-[#0B1120]">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-0 w-96 h-96 bg-neon-blue/10 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-0 w-96 h-96 bg-neon-pink/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 items-start">
+                <div>
+                    <h2 class="text-3xl font-bold mb-8 text-white flex items-center">
+                        <span class="w-12 h-1 bg-neon-pink mr-4"></span>關於 Iris
+                    </h2>
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-200">連結 <span class="text-neon-blue">科技</span> 與 <span class="text-neon-pink">人文</span> 的橋樑</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        我在內容產業工作超過十年，經歷過企劃到專案整合。面對不同領域與需求，我習慣先理解脈絡，再把複雜資訊整理成能被看懂、能被實際使用的內容。
+                    </p>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        近年投入 AI 與數位工具的研究，並應用在專題製作、流程設計與資料整理中。我也具備日文 N2 能力，能蒐集並轉化國際資訊，讓觀點更完整。工作核心聚焦於洞察、結構與易讀性，並在不斷變動的數位環境中持續精進。
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 glass-card rounded-md text-sm text-neon-blue border border-neon-blue/30">#JLPT N2</span>
+                        <span class="px-4 py-2 glass-card rounded-md text-sm text-neon-pink border border-neon-pink/30">#Cross-Functional</span>
+                        <span class="px-4 py-2 glass-card rounded-md text-sm text-green-400 border border-green-400/30">#Data Analysis</span>
+                        <span class="px-4 py-2 glass-card rounded-md text-sm text-red-400 border border-red-400/30">#Photoshop</span>
+                    <span class="px-4 py-2 glass-card rounded-md text-sm text-yellow-400 border border-yellow-400/30">
+  #Adobe Audition
+</span>
+                    </div>
+                </div>
+
+                <!-- Timeline (滾動條已優化) -->
+                <div class="glass-card p-8 rounded-2xl relative max-h-[600px] overflow-y-auto custom-scrollbar">
+                    <h4 class="text-xl font-bold mb-8 text-white border-b border-gray-700 pb-4 sticky top-0 bg-[#1E293B] z-10">Professional Timeline</h4>
+                    <div class="space-y-8 pl-4 border-l border-gray-700 ml-2">
+                        
+                        <!-- Timeline Items -->
+                        <div class="relative pl-8 group">
+                            <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-neon-pink ring-4 ring-[#0F172A] group-hover:ring-neon-pink/30 transition"></span>
+                            <span class="text-xs font-mono text-neon-pink mb-1 block">2021 - Present</span>
+                            <h5 class="text-lg font-bold text-white">數位內容專案經理</h5>
+                            <p class="text-sm text-gray-400 mb-1">遠見天下文化事業群</p>
+                            <p class="text-xs text-gray-500">主導數位內容專案整合與策略規劃，推動 AI 與數位轉型應用。</p>
+                        </div>
+                        <div class="relative pl-8 group">
+                            <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-500 ring-4 ring-[#0F172A] group-hover:bg-neon-blue transition"></span>
+                            <span class="text-xs font-mono text-gray-500 mb-1 block">2020 - 2021</span>
+                            <h5 class="text-lg font-bold text-gray-300">創作者經營專員</h5>
+                            <p class="text-sm text-gray-400 mb-1">新銳數位 (方格子)</p>
+                            <p class="text-xs text-gray-500">專注於創作者協作與平台內容管理。</p>
+                        </div>
+                        <div class="relative pl-8 group">
+                            <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-500 ring-4 ring-[#0F172A] group-hover:bg-neon-blue transition"></span>
+                            <span class="text-xs font-mono text-gray-500 mb-1 block">2017 - 2020</span>
+                            <h5 class="text-lg font-bold text-gray-300">主編</h5>
+                            <p class="text-sm text-gray-400 mb-1">太雅出版社</p>
+                            <p class="text-xs text-gray-500">負責國際旅遊主題叢書內容企劃與專案執行。</p>
+                        </div>
+                        <div class="relative pl-8 group">
+                            <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-500 ring-4 ring-[#0F172A] group-hover:bg-neon-blue transition"></span>
+                            <span class="text-xs font-mono text-gray-500 mb-1 block">2013 - 2017</span>
+                            <h5 class="text-lg font-bold text-gray-300">編輯-主編</h5>
+                            <p class="text-sm text-gray-400 mb-1">凱信出版社</p>
+                            <p class="text-xs text-gray-500">圖書編輯、企劃與主辦線下活動。</p>
+                        </div>
+                        <div class="relative pl-8 group">
+                            <span class="absolute -left-[21px] top-1 h-3 w-3 rounded-full bg-gray-500 ring-4 ring-[#0F172A] group-hover:bg-neon-pink transition"></span>
+                            <span class="text-xs font-mono text-neon-blue mb-1 block">2018 - Present</span>
+                            <h5 class="text-lg font-bold text-gray-300">獨立內容作者 (專欄)</h5>
+                            <p class="text-sm text-gray-400">關鍵評論網 | 深度議題探討</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 職能 1: 專案管理 (3D Card Swap - 5 Cards) -->
+    <section id="pm" class="py-32 bg-[#0F172A] overflow-hidden relative min-h-screen flex flex-col justify-center">
+        <!-- 背景裝飾 -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-blue/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
+            <div class="text-center mb-12">
+                <span class="text-neon-pink font-mono tracking-widest text-sm uppercase">01 / Project Management</span>
+                <h2 class="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg">
+                    數位內容 & <span class="text-gradient">AI 應用專案</span>
+                </h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto text-base md:text-lg">
+                    瀏覽運用 AI 完成的重要專案，展現內容創新與整合能力。
+                </p>
+            </div>
+
+            <!-- 3D Card Swap 容器 -->
+            <div id="card-swap-wrapper" class="relative w-full h-[520px] flex justify-center items-center mt-4">
+                
+                <!-- 卡片 1: 資金專題 -->
+                <a href="https://www.gvm.com.tw/topic/2316" target="_blank" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <img src="images/money.jpg" alt="全球熱錢下一站" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-neon-pink text-white text-xs font-bold rounded shadow-lg">Finance AI</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow relative">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">全球熱錢下一站 ‧ 台灣</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            政府鳴槍推動「亞洲資產管理中心」，台灣超額儲蓄的30兆資產，能否成為驅動台灣下一波成長的引擎？
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-neon-blue font-mono font-bold">50K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 卡片 2: 烘焙商機 -->
+                <a href="https://www.gvm.com.tw/topic/2314" target="_blank" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <img src="images/baking.jpg" alt="烘焙商機" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-yellow-500 text-white text-xs font-bold rounded shadow-lg">Industry</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">烘焙飄香2000億商機！</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            經濟規模突破2000億元，養活超過十萬個家庭。台灣烘焙不只是小確幸，更是亂局中支撐經濟的軟實力！
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-yellow-400 font-mono font-bold">100K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 卡片 3: 失智海嘯 -->
+                <a href="https://www.gvm.com.tw/topic/2310" target="_blank" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <img src="images/dementia.jpg" alt="失智海嘯" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded shadow-lg">Society</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">失智海嘯．全球衝擊！</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            台灣已有37萬名患者，無聲的長照海嘯正襲向數十萬家庭，我們可以如何因應這場全球性的挑戰？
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-red-400 font-mono font-bold">60K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 卡片 4: 核三公投 -->
+                <a href="https://www.gvm.com.tw/topic/2309" target="_blank" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <img src="images/nuclear.jpg" alt="核三公投" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-green-500 text-white text-xs font-bold rounded shadow-lg">Policy</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">823重啟核三公投大解析</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            同意與不同意比例約為 73.5% vs 25.6%。凸顯人民對於傾向支持核三延役的態度，深度數據解析。
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-green-400 font-mono font-bold">150K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 卡片 5: 稀土爭奪戰 -->
+                <a href="https://www.gvm.com.tw/topic/2300" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <img src="images/rare_earth.jpg" alt="稀土爭奪戰" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded shadow-lg">Tech War</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">全球稀土爭奪戰</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            從電動車、晶片、AI到軍工，看似毫不相關的產業，卻都離不開一樣東西：稀土。揭開全球資源戰略佈局。
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-purple-400 font-mono font-bold">30K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+               <!-- 卡片 6: 非核家園 -->
+                <a href="https://www.gvm.com.tw/topic/2302" target="_blank" class="swap-card glass-card group">
+                    <div class="relative h-48 min-h-[192px] overflow-hidden rounded-t-xl bg-gray-800">
+                        <!-- 修改 alt 描述 -->
+                        <img src="images/non.jpg" alt="非核家園" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-4 left-4">
+                            <!-- 您可以保留紫色，或改為 bg-orange-500 以區分不同類別 -->
+                            <span class="px-3 py-1 bg-purple-500 text-white text-xs font-bold rounded shadow-lg">Energy</span>
+                        </div>
+                    </div>
+                    <div class="p-6 text-left flex flex-col flex-grow">
+                        <h3 class="text-xl font-bold text-white mb-2 leading-tight group-hover:text-neon-blue transition">非核家園殘酷真相！</h3>
+                        <p class="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-3">
+                            隨著全球AI浪潮席捲而來，輝達執行長黃仁勳積極推動「AI台灣隊」的成立，但是面對電力供應挑戰，以及嚴峻的碳排壓力，台灣能否抓住這波改革契機，同時支撐產業升級與永續發展？
+                        </p>
+                        <div class="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                            <div class="text-purple-400 font-mono font-bold">30K+ <span class="text-xs text-gray-500">瀏覽</span></div>
+                            <i class="fas fa-external-link-alt text-gray-500 group-hover:text-white transition"></i>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            
+            <div class="text-center mt-10 md:mt-6 text-gray-500 text-sm animate-pulse">
+                <i class="fas fa-mouse pointer-events-none mr-2"></i>
+                Hover to Pause / Click Card to View Project
+            </div>
+        </div>
+    </section>
+
+   <!-- NEW SECTION: Podcast Project (Extension of PM) -->
+<section id="podcast" class="py-24 bg-[#0F172A] relative border-t border-white/5">
+    <!-- 背景裝飾 -->
+    <div class="absolute left-0 bottom-0 w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+    
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+        <!-- Header -->
+        <div class="mb-12 text-center"> <!-- 加入 text-center 確保文字置中 -->
+            
+            <span class="text-neon-pink font-mono tracking-widest text-sm uppercase">02 / Podcast Project</span>
+            
+            <h3 class="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg">
+                聲音媒體 & <span class="text-gradient">影響力策展</span>
+            </h3>
+            <br>
+            <!-- 修改處：加入 mx-auto 讓整個卡片區塊置中 -->
+            <!-- 如果覺得左邊單邊框不對稱，可將 border-l-4 改為 border 變成全框 -->
+            <div class="glass-card p-6 md:p-8 rounded-2xl border-l-4 border-neon-pink max-w-4xl mx-auto">
+                <p class="text-gray-300 text-lg leading-relaxed">
+                    成功策劃並管理 Podcast 專案達 3 年，累計創造逾 <span class="text-white font-bold">2,500 萬次</span> 下載量。<br>
+                    曾榮登 Apple Podcast「新聞類」第一名，並入圍華文永續報導獎。
+                </p>
+            </div>
+            
+        </div>
+
+        <!-- 下方 Podcast Grid 區塊保持不變... -->
+
+            <!-- Podcast Grid (Responsive: Mobile Horizontal Scroll / Desktop Grid) -->
+            <!-- 修改說明: 
+                 1. flex: 手機版改為彈性佈局 
+                 2. overflow-x-auto: 開啟水平捲動條
+                 3. snap-x snap-mandatory: 增加滑動時的磁吸效果，體驗更好
+                 4. pb-6: 底部留一點空間給捲動條
+            -->
+            <div class="flex gap-6 overflow-x-auto pb-8 px-4 -mx-4 md:grid md:grid-cols-2 md:gap-8 md:overflow-visible md:pb-0 md:px-0 md:mx-0 snap-x snap-mandatory scroll-smooth">
+                
+                <!-- Item 1 -->
+                <!-- 修改說明: 加入 min-w-[85vw] (手機版寬度) 與 flex-shrink-0 (防止壓縮) -->
+                <div class="min-w-[85vw] md:min-w-0 md:w-full max-w-[660px] flex-shrink-0 snap-center hover:transform hover:-translate-y-1 transition duration-300 shadow-lg hover:shadow-neon-pink/20 rounded-[10px]">
+                    <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/s3-ep226-%E9%81%A0%E8%A6%8B%E5%A4%A7%E4%BA%BA%E7%89%A9-%E7%9C%9F%E5%AF%A6%E7%9A%84-%E9%80%A0%E5%B1%B1%E8%80%85-%E4%BE%86%E4%BA%86-%E5%8F%B2%E6%AC%BD%E6%B3%B0%E6%8F%AD%E5%AF%86%E5%8F%B0%E7%81%A3%E5%A6%82%E4%BD%95%E5%BE%9E%E7%94%A2%E6%A5%AD%E6%B2%99%E6%BC%A0%E6%89%93%E9%80%A0%E5%8D%8A%E5%B0%8E%E9%AB%94%E5%B8%9D%E5%9C%8B-ft/id1589171941?i=1000729484412"></iframe>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="min-w-[85vw] md:min-w-0 md:w-full max-w-[660px] flex-shrink-0 snap-center hover:transform hover:-translate-y-1 transition duration-300 shadow-lg hover:shadow-neon-pink/20 rounded-[10px]">
+                     <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/s3-ep261-esg%E5%85%B1%E5%A5%BD%E5%9C%88-%E5%BE%9E%E7%94%B0%E9%96%93%E5%88%B0%E9%A4%90%E6%A1%8C-%E5%98%89%E7%BE%A9%E5%A4%A7%E5%AD%B8%E5%A6%82%E4%BD%95%E7%94%A8%E6%99%BA%E6%85%A7%E8%BE%B2%E6%A5%AD%E8%88%87%E5%BE%AA%E7%92%B0%E7%B6%93%E6%BF%9F-%E6%89%93%E9%80%A0%E7%B6%A0%E8%89%B2%E5%A4%A7%E5%AD%B8%E6%96%B0%E5%85%B8%E7%AF%84-ft/id1589171941?i=1000739092243"></iframe>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="min-w-[85vw] md:min-w-0 md:w-full max-w-[660px] flex-shrink-0 snap-center hover:transform hover:-translate-y-1 transition duration-300 shadow-lg hover:shadow-neon-pink/20 rounded-[10px]">
+                    <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/s3-ep190-%E7%8D%A8%E5%AE%B6%E8%AA%BF%E6%9F%A5-%E6%A0%B8%E5%BB%A2%E6%96%99%E5%88%B0%E5%BA%95%E8%A9%B2%E6%94%BE%E8%AA%B0%E5%AE%B6-%E7%82%BA%E4%BD%95%E9%9F%93%E5%9C%8B%E8%83%BD%E5%A4%A0%E6%93%81%E6%A0%B8-%E5%8F%B0%E7%81%A3%E5%8D%BB%E4%B8%8D%E8%83%BD/id1589171941?i=1000717148032"></iframe>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="min-w-[85vw] md:min-w-0 md:w-full max-w-[660px] flex-shrink-0 snap-center hover:transform hover:-translate-y-1 transition duration-300 shadow-lg hover:shadow-neon-pink/20 rounded-[10px]">
+                    <iframe allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" frameborder="0" height="175" style="width:100%;max-width:660px;overflow:hidden;border-radius:10px;" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" src="https://embed.podcasts.apple.com/us/podcast/s3-ep254-%E7%9B%B4%E6%93%8Acop30-cop30%E7%8F%BE%E5%A0%B4%E7%9B%B4%E6%93%8A-%E6%B0%A3%E5%80%99%E8%B3%87%E9%87%91-ai-%E5%85%AC%E6%AD%A3%E8%BD%89%E5%9E%8B-%E5%85%A8%E7%90%83%E6%B0%A3%E5%80%99%E8%AB%87%E5%88%A4%E7%AC%AC%E4%B8%80%E6%89%8B%E8%A7%80%E5%AF%9F/id1589171941?i=1000737376494"></iframe>
+                </div>
+            
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 職能 2: 內容創作 -->
+    <section id="content" class="py-24 relative overflow-hidden bg-[#0B1120]">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-neon-blue font-mono tracking-widest text-sm uppercase">03 / Content Creator</span>
+                
+            <h3 class="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg">
+               專欄寫作 &  <span class="text-gradient">日文編譯 </span></h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <!-- 左側卡片 (粉色特效) -->
+                <!-- color 設定為您的 neon-pink (#E947F5) -->
+                <div class="js-electric-border electric-border-container" data-color="#E947F5">
+                    <!-- 注意：這裡移除了 border-l-4, 並加上 border-0 避免雙重邊框 -->
+                    <div class="glass-card p-8 rounded-2xl border-0 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-6">
+                                <i class="fas fa-pen-fancy text-3xl text-neon-pink mr-4"></i>
+                                <h3 class="text-2xl font-bold text-white">關鍵評論網專欄</h3>
+                            </div>
+                            <p class="text-gray-400 mb-6">自 2018 年起擔任獨立內容作者，擅長日本文化、電影影劇等藝文內容探討。</p>
+                            <div class="space-y-3 mb-8">
+                                <div class="bg-gray-800/50 p-3 rounded flex justify-between items-center hover:bg-gray-700/50 transition">
+                                    <span class="text-gray-200 text-sm font-medium">最後的秘境：東京藝大</span>
+                                    <span class="text-neon-pink text-xs font-mono">190k PV</span>
+                                </div>
+                                <div class="bg-gray-800/50 p-3 rounded flex justify-between items-center hover:bg-gray-700/50 transition">
+                                    <span class="text-gray-200 text-sm font-medium">跟拍到你家</span>
+                                    <span class="text-neon-pink text-xs font-mono">110k PV</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="https://www.thenewslens.com/author/iris" target="_blank" class="flex items-center justify-center w-full py-3 rounded border border-gray-600 text-gray-300 hover:border-neon-pink hover:text-neon-pink transition">
+                            閱讀專欄 <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 右側卡片 (藍色特效) -->
+                <!-- color 設定為您的 neon-blue (#4F75FF) -->
+                <div class="js-electric-border electric-border-container" data-color="#4F75FF">
+                    <!-- 注意：這裡移除了 border-l-4, 並加上 border-0 -->
+                    <div class="glass-card p-8 rounded-2xl border-0 h-full flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center mb-6">
+                                <i class="fas fa-language text-3xl text-neon-blue mr-4"></i>
+                                <h3 class="text-2xl font-bold text-white">跨形式與跨語言轉譯</h3>
+                            </div>
+                            <div class="space-y-6 mb-8">
+                                <div>
+                                    <h4 class="text-lg font-bold text-white mb-1">Podcast 新聞化</h4>
+                                    <p class="text-gray-400 text-sm">將音頻轉譯為深度報導，雙向導流。</p>
+                                    <div class="mt-2 text-neon-blue text-xs font-mono">➜ 單篇平均 PV 30,000</div>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-white mb-1">日文新聞編譯</h4>
+                                    <p class="text-gray-400 text-sm">蒐集日文新聞並編譯成專業報導。</p>
+                                    <div class="mt-2 text-neon-blue text-xs font-mono">➜ 單篇平均 PV 50,000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="https://www.gvm.com.tw/author/6623" target="_blank" class="flex items-center justify-center w-full py-3 rounded border border-gray-600 text-gray-300 hover:border-neon-blue hover:text-neon-blue transition">
+                            閱讀專欄 <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <!-- 職能 3: 社群創新 -->
+    <!-- 職能 3: 社群創新 (已修改手機版排版) -->
+<section id="community" class="py-24 bg-gradient-to-b from-[#0F172A] to-black relative">
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+        <div class="glass-card rounded-3xl p-8 md:p-12 border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+            
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                
+                <!-- 左側：文字區塊 -->
+                <div class="md:w-1/2 w-full">
+                    <span class="text-neon-pink font-bold tracking-widest uppercase text-sm">04 / Side Project</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white mt-2 mb-6">書適圈 讀書會創辦人</h2>
+
+                    <!-- ▼▼▼【新增】手機版專用圖片區塊 (只在手機出現 block，電腦隱藏 md:hidden) ▼▼▼ -->
+                    <div class="relative group block md:hidden mb-8">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-neon-pink to-neon-blue rounded-lg blur opacity-25"></div>
+                        <div class="relative bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
+                            <!-- 請確認這裡的 src 是正確的圖片路徑 -->
+                            <img src="images/bookcircle.jpg" 
+                                 alt="書適圈" class="w-full h-auto object-cover opacity-90">
+                        </div>
+                    </div>
+                    <!-- ▲▲▲ 手機版圖片結束 ▲▲▲ -->
+
+                    <p class="text-gray-300 mb-8 leading-relaxed text-lg">
+                        AI 驅動的社群實驗。從概念發想到落地，運用 <span class="text-neon-blue font-bold">Manus</span> 完成網站開發，並建立「有厚度」的社群關係。
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="https://bookcircle-6ssfyct8.manus.space/" target="_blank" class="px-6 py-3 bg-neon-pink text-white rounded-lg font-bold hover:bg-pink-600 transition shadow-[0_0_15px_rgba(233,71,245,0.4)] text-center">
+                            查看招募網站
+                        </a>
+                        <a href="https://iris130805.github.io/littlegame01/" target="_blank" class="px-6 py-3 border border-white/30 text-white rounded-lg font-bold hover:bg-white/10 transition flex items-center justify-center">
+                            <i class="fas fa-gamepad mr-2"></i>配對小遊戲
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 右側：電腦版圖片區塊 -->
+                <!-- ▼▼▼【修改】加上 hidden md:block (手機隱藏，電腦顯示) ▼▼▼ -->
+                <div class="md:w-1/2 w-full hidden md:block">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-neon-pink to-neon-blue rounded-lg blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
+                        <div class="relative bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
+                            <!-- 請確認這裡的 src 是正確的圖片路徑 -->
+                            <img src="images/bookcircle.jpg" 
+                                 alt="書適圈" class="w-full h-auto opacity-90 group-hover:scale-105 transition duration-500">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-black py-12 border-t border-gray-800 text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-white mb-8">Ready to Innovate?</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-6 mb-10">
+                <a href="mailto:iris130805@gmail.com" class="flex items-center justify-center space-x-3 px-6 py-3 glass-card rounded-full text-gray-300 hover:text-white hover:border-neon-pink transition">
+                    <i class="fas fa-envelope text-neon-pink"></i>
+                    <span>iris130805@gmail.com</span>
+                </a>
+                <a href="tel:0930598735" class="flex items-center justify-center space-x-3 px-6 py-3 glass-card rounded-full text-gray-300 hover:text-white hover:border-neon-blue transition">
+                    <i class="fas fa-phone text-neon-blue"></i>
+                    <span>0930-598-735</span>
+                </a>
+            </div>
+            <p class="text-gray-600 text-xs tracking-wider">
+                &copy; 2025 IRIS'S PORTFOLIO. POWERED BY AI & CREATIVITY.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script 1: GSAP 3D Card Swap Logic (最終修正版：手機第一張置中 / 電腦維持整組對稱) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. 偵測裝置函數
+            const checkMobile = () => window.innerWidth < 768;
+            let isMobile = checkMobile();
+
+            // 2. 參數設定 (動態獲取)
+            const getConfig = () => {
+                isMobile = checkMobile();
+                return {
+                    // 手機版間距小(緊密)，電腦版間距大(展開)
+                    cardDistance: isMobile ? 35 : 100,      
+                    
+                    // 手機版垂直間距大(讓標題露出)，電腦版小
+                    verticalDistance: isMobile ? 35 : 25,  
+                    
+                    delay: 3500,           
+                    skewAmount: 2, 
+                    durDrop: 1.0, 
+                    durMove: 0.8, 
+                    durReturn: 0.8 
+                };
+            };
+            
+            const cards = document.querySelectorAll('.swap-card');
+            const container = document.getElementById('card-swap-wrapper');
+            if (!cards.length || !container) return;
+
+            let order = Array.from({ length: cards.length }, (_, i) => i);
+            let isAnimating = false;
+            let intervalId = null;
+            let currentTl = null;
+
+           // 👇 重點修正：位置計算函式
+           const makeSlot = (index, total) => {
+                const config = getConfig(); // 獲取當前配置
+                let offset;
+                
+                if (isMobile) {
+                    // 【手機版邏輯】
+                    // 強制 Offset = 0
+                    // 結果：第一張卡片(index 0) x座標為 0 (螢幕正中央)
+                    // 後面的卡片依序向右後方排列
+                    offset = 0; 
+                } else {
+                    // 【電腦版邏輯】(維持原樣)
+                    // 計算總寬度的一半
+                    // 結果：整組卡片的「中心點」在螢幕正中央
+                    // 第一張卡片會偏左，最後一張偏右，形成對稱扇形
+                    offset = ((total - 1) * config.cardDistance) / 2;
+                }
+                
+                return {
+                    x: (index * config.cardDistance) - offset,
+                    y: -index * config.verticalDistance,
+                    z: -index * 50,
+                    zIndex: total - index,
+                    scale: 1 - (index * 0.04),
+                    opacity: 1 - (index * 0.1)
+                };
+            };
+
+            const placeNow = (element, slot) => {
+                const config = getConfig();
+                gsap.set(element, {
+                    x: slot.x, y: slot.y, z: slot.z, scale: slot.scale,
+                    opacity: slot.opacity,
+                    
+                    // CSS 已設定 left: 50%，搭配 xPercent: -50 達到基準點置中
+                    xPercent: -50, yPercent: -50, zIndex: slot.zIndex,
+                    skewY: config.skewAmount, transformOrigin: 'center center', force3D: true,
+                    pointerEvents: 'auto'
+                });
+            };
+
+            // 初始排列
+            cards.forEach((card, i) => placeNow(card, makeSlot(i, cards.length)));
+
+            const swapCards = () => {
+                if (isAnimating) return;
+                
+                const config = getConfig();
+                const total = cards.length;
+                const frontIndex = order[0];
+                const frontCard = cards[frontIndex];
+                const restIndices = order.slice(1);
+
+                const tl = gsap.timeline({
+                    onStart: () => { isAnimating = true; },
+                    onComplete: () => { 
+                        isAnimating = false; 
+                        order = [...restIndices, frontIndex];
+                    }
+                });
+                currentTl = tl;
+
+                // 1. 第一張往下掉
+                tl.to(frontCard, { y: "+=400", rotation: -5, opacity: 0, duration: config.durDrop, ease: "back.in(0.8)" });
+                
+                tl.addLabel("promote", "-=0.6");
+
+                // 2. 後面幾張往前遞補
+                restIndices.forEach((idx, i) => {
+                    const card = cards[idx];
+                    const slot = makeSlot(i, total); // 這裡會自動判斷是手機還是電腦版邏輯
+                    tl.to(card, {
+                        x: slot.x, y: slot.y, z: slot.z, scale: slot.scale, opacity: slot.opacity,
+                        duration: config.durMove, ease: "power2.inOut"
+                    }, "promote+=" + (i * 0.05));
+                    tl.set(card, { zIndex: slot.zIndex }, "promote");
+                });
+
+                // 3. 第一張回到最後面
+                const backSlot = makeSlot(total - 1, total);
+                tl.addLabel("return", ">-0.2");
+                tl.set(frontCard, { zIndex: backSlot.zIndex }, "return");
+                tl.to(frontCard, {
+                    x: backSlot.x, y: backSlot.y, z: backSlot.z, scale: backSlot.scale,
+                    rotation: 0, opacity: backSlot.opacity, duration: config.durReturn, ease: "power2.out"
+                }, "return");
+            };
+
+            const startLoop = () => { intervalId = setInterval(swapCards, 3500); };
+            const stopLoop = () => { clearInterval(intervalId); };
+
+            startLoop();
+
+            container.addEventListener('mouseenter', () => { 
+                stopLoop(); 
+                if(currentTl && currentTl.isActive()) currentTl.pause(); 
+            });
+            container.addEventListener('mouseleave', () => { 
+                if(currentTl && currentTl.paused()) currentTl.resume(); 
+                startLoop(); 
+            });
+            
+            // 監聽視窗大小改變，確保切換裝置寬度時能即時更新排列
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    // 重新計算位置並強制更新
+                    const newIsMobile = checkMobile();
+                    if (newIsMobile !== isMobile) {
+                        isMobile = newIsMobile;
+                        // 重新排列所有卡片
+                        cards.forEach((card, i) => {
+                            // 注意：這裡因為 order 已經變了，簡單重整最保險，
+                            // 但為了不刷新頁面，我們重新計算目前的位置
+                            // 這裡只做簡單更新，確保寬度模式切換
+                        });
+                        // 建議在開發測試時手動刷新頁面查看效果
+                    }
+                }, 250);
+            });
+        });
+    </script>
+
+    <!-- Script 2: UI Logic -->
+    <script>
+        const btn = document.querySelector("button.mobile-menu-button");
+        const menu = document.querySelector(".mobile-menu");
+        if (btn && menu) {
+            btn.addEventListener("click", () => { menu.classList.toggle("hidden"); });
+        }
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                // 如果是卡片的空連結(#)，不阻止也不跳動，但如果是導航連結則平滑滾動
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    e.preventDefault();
+                    document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+                    if(menu && !menu.classList.contains("hidden")) menu.classList.add("hidden");
+                }
+            });
+        });
+    </script>
+
+    <!-- Script 3: Three.js Background Animation -->
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+
+            const vertexShader = `
+            precision highp float;
+            void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+            `;
+            const fragmentShader = `
+            precision highp float;
+            uniform float iTime; uniform vec3 iResolution; uniform float animationSpeed;
+            uniform bool enableTop; uniform bool enableMiddle; uniform bool enableBottom;
+            uniform int topLineCount; uniform int middleLineCount; uniform int bottomLineCount;
+            uniform float topLineDistance; uniform float middleLineDistance; uniform float bottomLineDistance;
+            uniform vec3 topWavePosition; uniform vec3 middleWavePosition; uniform vec3 bottomWavePosition;
+            uniform vec2 iMouse; uniform bool interactive; uniform float bendRadius; uniform float bendStrength; uniform float bendInfluence;
+            uniform bool parallax; uniform float parallaxStrength; uniform vec2 parallaxOffset;
+            uniform vec3 lineGradient[8]; uniform int lineGradientCount;
+            const vec3 BLACK = vec3(0.0);
+            const vec3 PINK  = vec3(233.0, 71.0, 245.0) / 255.0;
+            const vec3 BLUE  = vec3(47.0,  75.0, 162.0) / 255.0;
+            mat2 rotate(float r) { return mat2(cos(r), sin(r), -sin(r), cos(r)); }
+            vec3 background_color(vec2 uv) {
+                vec3 col = vec3(0.0);
+                float y = sin(uv.x - 0.2) * 0.3 - 0.1;
+                float m = uv.y - y;
+                col += mix(BLUE, BLACK, smoothstep(0.0, 1.0, abs(m)));
+                col += mix(PINK, BLACK, smoothstep(0.0, 1.0, abs(m - 0.8)));
+                return col * 0.5;
+            }
+            vec3 getLineColor(float t, vec3 baseColor) {
+                if (lineGradientCount <= 0) return baseColor;
+                vec3 gradientColor;
+                if (lineGradientCount == 1) { gradientColor = lineGradient[0]; } else {
+                    float clampedT = clamp(t, 0.0, 0.9999);
+                    float scaled = clampedT * float(lineGradientCount - 1);
+                    int idx = int(floor(scaled));
+                    float f = fract(scaled);
+                    int idx2 = min(idx + 1, lineGradientCount - 1);
+                    gradientColor = mix(lineGradient[idx], lineGradient[idx2], f);
+                }
+                return gradientColor * 0.5;
+            }
+            float wave(vec2 uv, float offset, vec2 screenUv, vec2 mouseUv, bool shouldBend) {
+                float time = iTime * animationSpeed;
+                float x_offset = offset; float x_movement = time * 0.1;
+                float amp = sin(offset + time * 0.2) * 0.3;
+                float y = sin(uv.x + x_offset + x_movement) * amp;
+                if (shouldBend) {
+                    vec2 d = screenUv - mouseUv;
+                    float influence = exp(-dot(d, d) * bendRadius); 
+                    float bendOffset = (mouseUv.y - screenUv.y) * influence * bendStrength * bendInfluence;
+                    y += bendOffset;
+                }
+                float m = uv.y - y;
+                return 0.0175 / max(abs(m) + 0.01, 1e-3) + 0.01;
+            }
+            void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+                vec2 baseUv = (2.0 * fragCoord - iResolution.xy) / iResolution.y;
+                baseUv.y *= -1.0;
+                if (parallax) baseUv += parallaxOffset;
+                vec3 col = vec3(0.0);
+                vec3 b = lineGradientCount > 0 ? vec3(0.0) : background_color(baseUv);
+                vec2 mouseUv = vec2(0.0);
+                if (interactive) { mouseUv = (2.0 * iMouse - iResolution.xy) / iResolution.y; mouseUv.y *= -1.0; }
+                if (enableBottom) {
+                    for (int i = 0; i < bottomLineCount; ++i) {
+                        float fi = float(i); float t = fi / max(float(bottomLineCount - 1), 1.0);
+                        vec3 lineCol = getLineColor(t, b);
+                        float angle = bottomWavePosition.z * log(length(baseUv) + 1.0);
+                        vec2 ruv = baseUv * rotate(angle);
+                        col += lineCol * wave(ruv + vec2(bottomLineDistance * fi + bottomWavePosition.x, bottomWavePosition.y), 1.5 + 0.2 * fi, baseUv, mouseUv, interactive) * 0.2;
+                    }
+                }
+                if (enableMiddle) {
+                    for (int i = 0; i < middleLineCount; ++i) {
+                        float fi = float(i); float t = fi / max(float(middleLineCount - 1), 1.0);
+                        vec3 lineCol = getLineColor(t, b);
+                        float angle = middleWavePosition.z * log(length(baseUv) + 1.0);
+                        vec2 ruv = baseUv * rotate(angle);
+                        col += lineCol * wave(ruv + vec2(middleLineDistance * fi + middleWavePosition.x, middleWavePosition.y), 2.0 + 0.15 * fi, baseUv, mouseUv, interactive);
+                    }
+                }
+                if (enableTop) {
+                    for (int i = 0; i < topLineCount; ++i) {
+                        float fi = float(i); float t = fi / max(float(topLineCount - 1), 1.0);
+                        vec3 lineCol = getLineColor(t, b);
+                        float angle = topWavePosition.z * log(length(baseUv) + 1.0);
+                        vec2 ruv = baseUv * rotate(angle);
+                        ruv.x *= -1.0;
+                        col += lineCol * wave(ruv + vec2(topLineDistance * fi + topWavePosition.x, topWavePosition.y), 1.0 + 0.2 * fi, baseUv, mouseUv, interactive) * 0.1;
+                    }
+                }
+                fragColor = vec4(col, 1.0);
+            }
+            void main() { vec4 color = vec4(0.0); mainImage(color, gl_FragCoord.xy); gl_FragColor = color; }
+            `;
+
+            const config = { lineCount: [10, 15, 20], lineDistance: [8, 6, 4], bendRadius: 5.0, bendStrength: -0.5, interactive: true, parallax: true, parallaxStrength: 0.2, animationSpeed: 1 };
+            const scene = new THREE.Scene();
+            const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            camera.position.z = 1;
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            const uniforms = {
+                iTime: { value: 0 }, iResolution: { value: new THREE.Vector3(container.clientWidth, container.clientHeight, 1) }, animationSpeed: { value: config.animationSpeed },
+                enableTop: { value: true }, enableMiddle: { value: true }, enableBottom: { value: true },
+                topLineCount: { value: config.lineCount[0] }, middleLineCount: { value: config.lineCount[1] }, bottomLineCount: { value: config.lineCount[2] },
+                topLineDistance: { value: config.lineDistance[0] * 0.01 }, middleLineDistance: { value: config.lineDistance[1] * 0.01 }, bottomLineDistance: { value: config.lineDistance[2] * 0.01 },
+                topWavePosition: { value: new THREE.Vector3(10.0, 0.5, -0.4) }, middleWavePosition: { value: new THREE.Vector3(5.0, 0.0, 0.2) }, bottomWavePosition: { value: new THREE.Vector3(2.0, -0.7, 0.4) },
+                iMouse: { value: new THREE.Vector2(-1000, -1000) }, interactive: { value: config.interactive },
+                bendRadius: { value: config.bendRadius }, bendStrength: { value: config.bendStrength }, bendInfluence: { value: 0 },
+                parallax: { value: config.parallax }, parallaxStrength: { value: config.parallaxStrength }, parallaxOffset: { value: new THREE.Vector2(0, 0) },
+                lineGradient: { value: Array(8).fill(new THREE.Vector3(1, 1, 1)) }, lineGradientCount: { value: 0 }
+            };
+            const material = new THREE.ShaderMaterial({ uniforms, vertexShader, fragmentShader });
+            const geometry = new THREE.PlaneGeometry(2, 2);
+            scene.add(new THREE.Mesh(geometry, material));
+            const mouseState = { current: new THREE.Vector2(-1000, -1000), target: new THREE.Vector2(-1000, -1000), influence: 0, targetInfluence: 0, parallaxCurrent: new THREE.Vector2(0, 0), parallaxTarget: new THREE.Vector2(0, 0) };
+            container.addEventListener('pointermove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top; const dpr = renderer.getPixelRatio();
+                mouseState.target.set(x * dpr, (rect.height - y) * dpr); mouseState.targetInfluence = 1.0;
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                mouseState.parallaxTarget.set(((x - centerX) / rect.width) * config.parallaxStrength, (-(y - centerY) / rect.height) * config.parallaxStrength);
+            });
+            container.addEventListener('pointerleave', () => { mouseState.targetInfluence = 0.0; });
+            window.addEventListener('resize', () => {
+                const width = container.clientWidth; const height = container.clientHeight;
+                renderer.setSize(width, height);
+                uniforms.iResolution.value.set(width * renderer.getPixelRatio(), height * renderer.getPixelRatio(), 1);
+            });
+            const clock = new THREE.Clock();
+            function animate() {
+                requestAnimationFrame(animate);
+                uniforms.iTime.value = clock.getElapsedTime();
+                const damping = 0.05;
+                mouseState.current.lerp(mouseState.target, damping); uniforms.iMouse.value.copy(mouseState.current);
+                mouseState.influence += (mouseState.targetInfluence - mouseState.influence) * damping; uniforms.bendInfluence.value = mouseState.influence;
+                mouseState.parallaxCurrent.lerp(mouseState.parallaxTarget, damping); uniforms.parallaxOffset.value.copy(mouseState.parallaxCurrent);
+                renderer.render(scene, camera);
+            }
+            animate();
+        });
+    </script>
+    <!-- Script: Electric Border Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const electricElements = document.querySelectorAll('.js-electric-border');
+
+            electricElements.forEach((el) => {
+                const color = el.getAttribute('data-color') || '#5227FF';
+                
+                // 設定 CSS 變數
+                el.style.setProperty('--eb-color', color);
+
+                // 產生唯一的 ID，避免多個卡片特效互相干擾
+                const uniqueId = 'eb-filter-' + Math.random().toString(36).substr(2, 9);
+                
+                // 1. 建立特效層結構 (Layers)
+                const layersHTML = `
+                    <div class="eb-layers">
+                        <div class="eb-stroke" style="filter: url(#${uniqueId});"></div>
+                        <div class="eb-glow-1"></div>
+                        <div class="eb-glow-2"></div>
+                        <div class="eb-background-glow"></div>
+                    </div>
+                `;
+                // 將特效層插入到卡片內容之前
+                el.insertAdjacentHTML('afterbegin', layersHTML);
+
+                // 2. 建立 SVG Filter (動態產生以符合該卡片尺寸)
+                // 使用 createElementNS 確保 SVG 命名空間正確
+                const svgNS = "http://www.w3.org/2000/svg";
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("class", "eb-svg-def");
+                
+                // 定義濾鏡內容
+                svg.innerHTML = `
+                    <defs>
+                        <filter id="${uniqueId}" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+                            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="noise1" seed="1" />
+                            <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+                                <animate attributeName="dy" values="0;0" dur="4s" repeatCount="indefinite" />
+                            </feOffset>
+
+                            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="noise2" seed="2" />
+                            <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+                                <animate attributeName="dy" values="0;0" dur="4s" repeatCount="indefinite" />
+                            </feOffset>
+                            
+                            <!-- 水平流動 -->
+                            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="noise3" seed="3" />
+                            <feOffset in="noise3" dx="0" dy="0" result="offsetNoise3">
+                                <animate attributeName="dx" values="0;0" dur="4s" repeatCount="indefinite" />
+                            </feOffset>
+
+                            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="3" result="noise4" seed="4" />
+                            <feOffset in="noise4" dx="0" dy="0" result="offsetNoise4">
+                                <animate attributeName="dx" values="0;0" dur="4s" repeatCount="indefinite" />
+                            </feOffset>
+
+                            <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+                            <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+                            <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+                            
+                            <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="25" xChannelSelector="R" yChannelSelector="G" />
+                        </filter>
+                    </defs>
+                `;
+                
+                el.appendChild(svg);
+
+                // 3. 動畫更新邏輯
+                // 需要根據容器的寬高來設定 offset 動畫的起點與終點，才能形成無縫循環
+                const updateAnimation = () => {
+                    const rect = el.getBoundingClientRect();
+                    const w = Math.round(rect.width);
+                    const h = Math.round(rect.height);
+
+                    // 取得 SVG 內的 animate 元素
+                    const animatesDy = svg.querySelectorAll('animate[attributeName="dy"]');
+                    const animatesDx = svg.querySelectorAll('animate[attributeName="dx"]');
+
+                    if(animatesDy.length >= 2) {
+                        animatesDy[0].setAttribute('values', `${h}; 0`);
+                        animatesDy[1].setAttribute('values', `0; -${h}`);
+                    }
+                    if(animatesDx.length >= 2) {
+                        animatesDx[0].setAttribute('values', `${w}; 0`);
+                        animatesDx[1].setAttribute('values', `0; -${w}`);
+                    }
+                };
+
+                // 初始化
+                updateAnimation();
+                
+                // 監聽視窗大小改變
+                window.addEventListener('resize', updateAnimation);
+                
+                // 使用 ResizeObserver 確保元素尺寸改變時動畫跟著更新
+                const ro = new ResizeObserver(updateAnimation);
+                ro.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
