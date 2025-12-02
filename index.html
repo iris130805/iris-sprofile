@@ -249,7 +249,7 @@
     align-items: center;
     gap: 3px;
     height: 30px;
-    margin-left: 10px; /* 與文字的距離 */
+    /* 移除原本的 margin-left: 10px; 以便左右對稱 */
 }
 
 .sound-wave span {
@@ -618,25 +618,41 @@
     <div class="absolute left-0 bottom-0 w-96 h-96 bg-neon-blue/5 rounded-full blur-3xl pointer-events-none"></div>
     
     <div class="max-w-6xl mx-auto px-6 relative z-10">
-        <!-- Header -->
-        <div class="mb-12 text-center"> <!-- 加入 text-center 確保文字置中 -->
+       <!-- Header -->
+        <div class="mb-12 text-center">
             
-            <span class="text-neon-pink font-mono tracking-widest text-sm uppercase">02 / Podcast Project</span><br>
-            <!-- 音頻動畫 HTML -->
-    <div class="sound-wave">
-        <span></span><span></span><span></span><span></span><span></span>
-   
-            <!-- 修改說明：加入 inline-flex 讓動畫跟文字排同一行，並在最後面加入 sound-wave -->
-<h3 class="text-3xl md:text-5xl font-bold text-white mt-4 drop-shadow-lg inline-flex items-center justify-center">
-    聲音媒體 & <span class="text-gradient ml-2">影響力策展</span>
-    
-    <!-- 音頻動畫 HTML -->
-    <div class="sound-wave">
-        <span></span><span></span><span></span><span></span><span></span>
-    </div>
-</h3>
-            <br>
-            <br>
+            <span class="text-neon-pink font-mono tracking-widest text-sm uppercase">02 / Podcast Project</span>
+            
+            <!-- 修改後的主標題區塊 -->
+            <!-- 1. flex items-center justify-center: 讓左右音波跟文字水平置中對齊 -->
+            <!-- 2. gap-4: 設定音波與文字之間的距離 -->
+            <!-- 3. mb-10: 設定標題與下方卡片的距離 (空一行效果) -->
+            <h3 class="text-3xl md:text-5xl font-bold text-white mt-4 mb-10 drop-shadow-lg flex items-center justify-center gap-4">
+                
+                <!-- 左邊音波 -->
+                <div class="sound-wave">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+
+                <!-- 中間文字 -->
+                <span>聲音媒體 & <span class="text-gradient">影響力策展</span></span>
+                
+                <!-- 右邊音波 -->
+                <div class="sound-wave">
+                    <span></span><span></span><span></span><span></span><span></span>
+                </div>
+
+            </h3>
+            
+            <!-- 下方說明卡片 -->
+            <div class="glass-card p-6 md:p-8 rounded-2xl border-l-4 border-neon-pink max-w-4xl mx-auto">
+                <p class="text-gray-300 text-lg leading-relaxed">
+                    成功策劃並管理 Podcast 專案達 3 年，累計創造逾 <span class="text-white font-bold">2,500 萬次</span> 下載量。<br>
+                    曾榮登 Apple Podcast「新聞類」第一名，並入圍華文永續報導獎。
+                </p>
+            </div>
+            
+        </div>
             <!-- 修改處：加入 mx-auto 讓整個卡片區塊置中 -->
             <div class="glass-card p-6 md:p-8 rounded-2xl border-l-4 border-neon-pink max-w-4xl mx-auto">
                 <p class="text-gray-300 text-lg leading-relaxed">
