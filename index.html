@@ -95,19 +95,29 @@
             opacity: 0.15;
         }
 
-        /* 自定義捲軸 */
+       /* 自定義捲軸 (已優化視覺辨識度) */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 8px;   /* 垂直捲軸寬度 (給 Timeline 用) */
+            height: 8px;  /* 水平捲軸高度 (給 Podcast 用) */
         }
+        
+        /* 捲軸軌道 (底色) */
         ::-webkit-scrollbar-track {
-            background: #0F172A;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
+            background: rgba(0, 0, 0, 0.3); /* 深黑色半透明 */
             border-radius: 4px;
         }
+
+        /* 捲軸拉桿 (本體) */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.6); /* 淺灰色 (Slate 400) */
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* 加上一點白邊增加立體感 */
+        }
+
+        /* 滑鼠移上去時的效果 */
         ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
+            background: #E947F5; /* 變成霓虹粉，非常明顯 */
+            cursor: pointer;
         }
 
         /* --- 3D Card Swap 樣式 (已優化 RWD) --- */
