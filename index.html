@@ -281,7 +281,11 @@
     </nav>
 
     <!-- Hero Section (Three.js 3D 動畫背景) -->
-    <header class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- 修改說明：
+     1. h-screen 改為 min-h-screen (允許內容過長時可以往下長，不會被切掉)
+     2. 加上 pb-24 (在底部增加足夠的空間，確保按鈕不會貼底或被切到) 
+-->
+<header class="relative min-h-screen flex items-center justify-center overflow-hidden pb-24">
         
         <!-- 1. Three.js 動畫容器 -->
         <div id="canvas-container"></div>
